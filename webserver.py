@@ -45,9 +45,10 @@ def readFile(_filepath, _extradir, _vars = ""):
 	
 	if( file_type == "php" ):
 		try:
-			result = check_output(["php-cgi", "-f", "html" + _extradir + _filepath, _vars])
-			#run = Popen(["php-cgi", "-f", "html" + _extradir + _filepath, _vars], stdout=PIPE, stderr=PIPE)
-			#result, errors = run.communicate()
+			consoleInput = ["php-cgi", "-f", "html" + _extradir + _filepath]
+			consoleInput = consoleInput + _vars.split("&")
+			
+			result = check_output(consoleInput)
 			return result
 		except:
 			print("Error compiling PHP file - " + _extradir + _filepath)
@@ -111,10 +112,7 @@ def waitForConnection(_sock):
 		getvars = page_req.split("?")
 		# Assign vars into respective parts
 		page_req = getvars[0]
-		getvars = getvars[1]
-		
-		getvars = getvars.split("&")
-		cmd_vars = " ".join(getvars)
+		cmd_vars = getvars[1]
 	
 	if( page_req == "/" ):
 		if( doesFileExist(extra_dir + "/index.php") ):
